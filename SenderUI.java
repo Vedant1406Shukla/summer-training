@@ -154,7 +154,9 @@ public class SenderUI extends Application
             status.setText(
                 "Status : Call Ended"
             );
-
+            
+            callBtn.setStyle("");
+            
             endBtn.setStyle(
                 "-fx-background-color: red; -fx-text-fill: white;"
             );
@@ -246,29 +248,41 @@ public class SenderUI extends Application
                 if(msg == null)
                     break;
 
-                if(msg.equals("200 OK"))
-                {
-                    Platform.runLater(() ->
-                    {
-                        status.setText(
-                            "Status : Connected"
-                        );
+if(msg.equals("200 OK"))
+{
+    Platform.runLater(() ->
+    {
+        status.setText(
+            "Status : Connected"
+        );
 
-                        startTimer();
-                    });
-                }
+        callBtn.setStyle(
+            "-fx-background-color: green; " +
+            "-fx-text-fill: white;"
+        );
 
-                if(msg.equals("BYE"))
-                {
-                    Platform.runLater(() ->
-                    {
-                        stopTimer();
+        startTimer();
+    });
+}
 
-                        status.setText(
-                            "Status : Call Ended"
-                        );
-                    });
-                }
+if(msg.equals("BYE"))
+{
+    Platform.runLater(() ->
+    {
+        stopTimer();
+
+        status.setText(
+            "Status : Call Ended"
+        );
+
+        callBtn.setStyle("");
+
+        endBtn.setStyle(
+            "-fx-background-color: red; " +
+            "-fx-text-fill: white;"
+        );
+    });
+}
             }
         }
         catch(Exception e)
