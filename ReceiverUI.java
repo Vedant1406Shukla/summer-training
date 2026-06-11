@@ -21,6 +21,9 @@ import java.net.*;
 
 public class ReceiverUI extends Application
 {
+    private Button acceptBtn;
+    private Button endBtn;
+    
     private Label status;
     private Label timerLabel;
 
@@ -31,9 +34,11 @@ public class ReceiverUI extends Application
 
     private PrintWriter out;
 
-    private Button acceptBtn;
-    private Button endBtn;
-
+    private void resetButtons()
+{
+    acceptBtn.setStyle("");
+    endBtn.setStyle("");
+}
     private void startTimer()
     {
         seconds = 0;
@@ -188,6 +193,8 @@ public class ReceiverUI extends Application
             status.setText(
                 "Status : Call Ended"
             );
+            
+            resetButtons();
 
             endBtn.setStyle(
                 "-fx-background-color: red; -fx-text-fill: white;"
@@ -272,37 +279,45 @@ public class ReceiverUI extends Application
                 if(msg == null)
                     break;
 
-                if(msg.equals("INVITE"))
-                {
-                    Platform.runLater(() ->
-                    {
-                        status.setText(
-                            "Incoming Call..."
-                        );
+if(msg.equals("INVITE"))
+{
+    Platform.runLater(() ->
+    {
+        resetButtons();
 
-                        if(bell != null)
-                        {
-                            bell.play();
-                        }
-                    });
-                }
+        status.setText(
+            "Incoming Call..."
+        );
 
-                if(msg.equals("BYE"))
-                {
-                    Platform.runLater(() ->
-                    {
-                        if(bell != null)
-                        {
-                            bell.stop();
-                        }
+        if(bell != null)
+        {
+            bell.play();
+        }
+    });
+}
 
-                        stopTimer();
+if(msg.equals("BYE"))
+{
+    Platform.runLater(() ->
+    {
+        if(bell != null)
+        {
+            bell.stop();
+        }
 
-                        status.setText(
-                            "Call Ended"
-                        );
-                    });
-                }
+        stopTimer();
+
+        resetButtons();
+
+        status.setText(
+            "Status : Call Ended"
+        );
+
+        endBtn.setStyle(
+            "-fx-background-color: red; -fx-text-fill: white;"
+        );
+    });
+}
             }
         }
         catch(Exception e)
